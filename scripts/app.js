@@ -16,26 +16,29 @@
  */
 APP.Main = (function() {
 
-  var LAZY_LOAD_THRESHOLD = 300;
-  var $ = document.querySelector.bind(document);
+  var LAZY_LOAD_THRESHOLD = 300,
+    $ = document.querySelector.bind(document),
 
-  var stories = null;
-  var storyStart = 0;
-  var count = 100;
-  var main = $('main');
-  var inDetails = false;
-  var storyLoadCount = 0;
-  var localeData = {
-    data: {
-      intl: {
-        locales: 'en-US'
+    stories = null,
+    storyStart = 0,
+    count = 100,
+    main = $('main'),
+    inDetails = false,
+    scrolled = false,
+    storyLoadCount = 0,
+    localeData = {
+      data: {
+        intl: {
+          locales: 'en-US'
+        }
       }
-    }
-  };
+    },
 
-  var tmplStory = $('#tmpl-story').textContent;
-  var tmplStoryDetails = $('#tmpl-story-details').textContent;
-  var tmplStoryDetailsComment = $('#tmpl-story-details-comment').textContent;
+    tmplStory = $('#tmpl-story').textContent,
+    tmplStoryDetails = $('#tmpl-story-details').textContent,
+    tmplStoryDetailsComment = $('#tmpl-story-details-comment').textContent,
+    header = $('header'),
+    headerTitles = header.querySelector('.header__title-wrapper');
 
   if (typeof HandlebarsIntl !== 'undefined') {
     HandlebarsIntl.registerWith(Handlebars);
@@ -85,8 +88,8 @@ APP.Main = (function() {
     }
 
     // Colorize on complete.
-    if (storyLoadCount === 0)
-      colorizeAndScaleStories();
+    // if (storyLoadCount === 0)
+    //   colorizeAndScaleStories();
   }
 
   function onStoryClick(details) {
@@ -296,30 +299,35 @@ APP.Main = (function() {
   });
 
   main.addEventListener('scroll', function() {
-
-    var header = $('header');
-    var headerTitles = header.querySelector('.header__title-wrapper');
-    var scrollTopCapped = Math.min(70, main.scrollTop);
-    var scaleString = 'scale(' + (1 - (scrollTopCapped / 300)) + ')';
-
-    colorizeAndScaleStories();
-
-    header.style.height = (156 - scrollTopCapped) + 'px';
-    headerTitles.style.webkitTransform = scaleString;
-    headerTitles.style.transform = scaleString;
-
-    // Add a shadow to the header.
-    if (main.scrollTop > 70)
-      document.body.classList.add('raised');
-    else
-      document.body.classList.remove('raised');
-
-    // Check if we need to load the next batch of stories.
-    var loadThreshold = (main.scrollHeight - main.offsetHeight -
-        LAZY_LOAD_THRESHOLD);
-    if (main.scrollTop > loadThreshold)
-      loadStoryBatch();
+    scrolled = true;
   });
+
+  setInterval(function() {
+    if(scrolled) {
+        scrolled = false;
+
+        var scrollTopCapped = Math.min(70, main.scrollTop),
+          scaleString = 'scale(' + (1 - (scrollTopCapped / 300)) + ')';
+
+        //colorizeAndScaleStories();
+
+        header.style.height = (156 - scrollTopCapped) + 'px';
+        headerTitles.style.webkitTransform = scaleString;
+        headerTitles.style.transform = scaleString;
+
+        // Add a shadow to the header.
+        if (main.scrollTop > 70)
+          document.body.classList.add('raised');
+        else
+          document.body.classList.remove('raised');
+
+        // Check if we need to load the next batch of stories.
+        var loadThreshold = (main.scrollHeight - main.offsetHeight -
+            LAZY_LOAD_THRESHOLD);
+        if (main.scrollTop > loadThreshold)
+          loadStoryBatch();
+    }
+  }, 100);
 
   function loadStoryBatch() {
 
