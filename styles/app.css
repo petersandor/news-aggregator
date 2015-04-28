@@ -204,7 +204,7 @@ main.loading {
       0px 2px 7px 0px rgba(0, 0, 0, 0.10);
 }
 
-.story-details {
+#story-details {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -238,10 +238,15 @@ main.loading {
       0px 2px 7px 0px rgba(0, 0, 0, 0.10);
 
   overflow: hidden;
-  transition: opacity 0.3s ease-out;
+  transition: all 0.3s ease-out;
 }
 
-.story-details * {
+.details-active #story-details {
+  transition: 1s;
+  left: 0;
+}
+
+#story-details * {
   will-change: transform;
   transform: translateZ(0);
 }
