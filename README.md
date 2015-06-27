@@ -1,4 +1,6 @@
-# Udacity 60fps Course Samples
+# Hacker News aggregator
+Project for practicing web performance optimisation - fork from Udacity 60fps Course Samples.
+Demo of the app with my updates available at http://petersandor.name/hn
 
 **Please note: this code is intended for you to hone your debugging skills. It contains a lot of code that you should not use in production!**
 
